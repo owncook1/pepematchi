@@ -1,0 +1,14 @@
+{
+    "name": "pepematchi",
+    "description": "emoji matching game",
+    "display": "standalone",
+    "start_url": "/",
+    "icons": [
+      {
+        "src": "/favicon.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any maskable"
+      }
+    ]
+  }
