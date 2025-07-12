@@ -1,12 +1,21 @@
 <script lang="ts">
   import Game from "./Game.svelte";
   import "../styles.css";
-  let state: "waiting" | "playing" | "paused" | "won" | "lost" = "waiting";
+  let state: "waiting" | "playing" | "paused" | "won" | "lost" | "showdonate" = "waiting";
   import { levels } from "./levels";
   import Modal from "./Modal.svelte";
   import { confetti } from "@neoconfetti/svelte";
+  import { onMount } from "svelte";
+
 
   let game: Game;
+  onMount(() => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/gh/owncook1/pepecoin-donation@v1.0.0/pepecoin-donation.js';
+    script.defer = true;
+    document.body.appendChild(script);
+  });
+
 </script>
 
 <Game
@@ -28,7 +37,7 @@
   }}
 />
 
-{#if state !== "playing"}
+{#if state !== "playing" && state !=="showdonate"}
   <Modal>
     <header>
       <h1>pepe<span>match</span>i</h1>
@@ -58,7 +67,23 @@
         {/each}
       {/if}
     </div>
+    
+    <div class="donate-footer">
+  <button class="donate-link" on:click={() => state = "showdonate"}>
+    Donate
+  </button>
+</div>
   </Modal>
+{/if}
+
+{#if state === "showdonate"}
+  <div class="donate-modal">
+    <button class="close-btn" on:click={() => state = "waiting"}>×</button>
+    <pepecoin-donation
+      address="PqyhjZSdhQam4Biedt1uahE2gSdos38yo5"
+      title="Donate Pepecoin"
+    ></pepecoin-donation>
+  </div>
 {/if}
 
 {#if state === "won"}
@@ -93,6 +118,34 @@
     z-index: 1001;
     pointer-events: none;
   }
+  .donate-modal {
+    position: fixed;
+    inset: 0;
+    background: rgb(0,0,0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  .donate-footer {
+  margin-top: auto;
+  text-align: center;
+  padding: 1rem 0;
+}
+.donate-link {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-family: grandstander, cursive;
+  font-size: 1rem;
+  text-decoration: underline;
+  margin: 0;
+  padding: 0;
+}
+.donate-link:hover {
+  color: #aaa;
+}
 
 button{
 	font-family: grandstander, cursive;
@@ -105,6 +158,16 @@ button{
 	cursor: pointer;
 	margin:0.5em 0.5em 0 0;
 } 
+.close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
 
 button:hover{
   background-color: rgb(51, 49, 49);
